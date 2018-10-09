@@ -25,6 +25,35 @@ type Character struct {
 	Motivation          string
 }
 
+// Family is a family of characters
+type Family struct {
+	Father   Character
+	Mother   Character
+	Children []Character
+}
+
+func raceFromParents(father Character, mother Character) string {
+	if father.Race == mother.Race {
+		return father.Race
+	}
+
+	races := []string{father.Race, mother.Race}
+
+	if itemInCollection("elf", races) && itemInCollection("human", races) {
+		return "half-elf"
+	}
+
+	if itemInCollection("dwarf", races) && itemInCollection("human", races) {
+		return "half-dwarf"
+	}
+
+	if itemInCollection("dwarf", races) && itemInCollection("elf", races) {
+		return "dwelf"
+	}
+
+	return "abomination"
+}
+
 func randomOrientation() string {
 	thresholdBi := 5
 	thresholdGay := 15
@@ -63,6 +92,20 @@ func randomHeight(race string, gender string) int {
 	return int(float64(height) * genderRatio)
 }
 
+func randomRace() string {
+	thresholdDwarf := 10
+	thresholdElf := 20
+
+	result := rand.Intn(100)
+	if result <= thresholdDwarf {
+		return "dwarf"
+	} else if result <= thresholdElf {
+		return "elf"
+	} else {
+		return "human"
+	}
+}
+
 func randomWeight(race string, gender string) int {
 	minWeight := 0
 	maxWeight := 1
@@ -98,7 +141,7 @@ func Generate() Character {
 	char.HairStyle = randomItem(hairStyles)
 	char.EyeColor = randomItem(eyeColors)
 	char.FaceShape = randomItem(faceShapes)
-	char.Race = randomItem(races)
+	char.Race = randomRace()
 	char.Gender = randomItem(genders)
 	char.Orientation = randomOrientation()
 	char.Attitude = randomItem(attitudes)
@@ -117,4 +160,29 @@ func Generate() Character {
 	char.Weight = randomWeight(char.Race, char.Gender)
 
 	return char
+}
+
+// GenerateFamily generates a random family
+func GenerateFamily() Family {
+	mother := Character{}
+	father := Character{}
+	child := Character{}
+	children := []Character{}
+
+	mother = Generate()
+	mother.Gender = "female"
+
+	father = Generate()
+	father.Gender = "male"
+
+	mother.LastName = father.LastName
+
+	for i := 0; i < rand.Intn(6); i++ {
+		child = Generate()
+		child.LastName = father.LastName
+		child.Race = raceFromParents(father, mother)
+		children = append(children, child)
+	}
+
+	return Family{father, mother, children}
 }
