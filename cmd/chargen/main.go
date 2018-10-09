@@ -12,6 +12,7 @@ import (
 )
 
 func displayCharacter(char chargen.Character) {
+	fmt.Println("Name: " + char.FirstName + " " + char.LastName)
 	fmt.Println("Hair: " + char.HairColor + ", " + char.HairStyle)
 	fmt.Println("Eyes: " + char.EyeColor)
 	fmt.Println("Face Shape: " + char.FaceShape)
