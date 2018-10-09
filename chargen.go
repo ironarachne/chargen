@@ -1,9 +1,15 @@
 package chargen
 
-import "math/rand"
+import (
+	"math/rand"
+
+	"github.com/ironarachne/namegen"
+)
 
 // Character is a character
 type Character struct {
+	FirstName           string
+	LastName            string
 	HairColor           string
 	HairStyle           string
 	EyeColor            string
@@ -84,7 +90,10 @@ func randomWeight(race string, gender string) int {
 // Generate generates a random character
 func Generate() Character {
 	char := Character{}
+	nameGenerator := namegen.NameGeneratorFromType("anglosaxon")
 
+	char.FirstName = nameGenerator.FirstName()
+	char.LastName = nameGenerator.LastName()
 	char.HairColor = randomItem(hairColors)
 	char.HairStyle = randomItem(hairStyles)
 	char.EyeColor = randomItem(eyeColors)
