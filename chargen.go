@@ -25,14 +25,29 @@ type Character struct {
 	Motivation          string
 }
 
-// Family is a family of characters
-type Family struct {
-	Father   Character
-	Mother   Character
-	Children []Character
+// Couple is a pair of partners
+type Couple struct {
+	Partner1        Character
+	Partner2        Character
+	CanHaveChildren bool
 }
 
-func raceFromParents(father Character, mother Character) string {
+// Family is a family of characters
+type Family struct {
+	FamilyName string
+	Parents    Couple
+	Children   []Character
+}
+
+func getOppositeGender(gender string) string {
+	if gender == "male" {
+		return "female"
+	} else {
+		return "male"
+	}
+}
+
+func getRaceFromParents(father Character, mother Character) string {
 	if father.Race == mother.Race {
 		return father.Race
 	}
@@ -162,27 +177,57 @@ func Generate() Character {
 	return char
 }
 
+// GenerateCouple generates a couple
+func GenerateCouple() Couple {
+	char1 := Generate()
+	char2 := Generate()
+	canHaveChildren := false
+
+	races := []string{char1.Race, char2.Race}
+	orientations := []string{char1.Orientation, char2.Orientation}
+
+	if (char1.Orientation == "gay" && char2.Orientation == "straight") || (char1.Orientation == "straight" && char2.Orientation == "gay") {
+		char2.Orientation = char1.Orientation
+		orientations = []string{char1.Orientation}
+	}
+
+	if char1.Gender == char2.Gender && itemInCollection("straight", orientations) {
+		char2.Gender = getOppositeGender(char1.Gender)
+	} else if char1.Gender != char2.Gender && itemInCollection("gay", orientations) {
+		char2.Gender = char1.Gender
+	}
+
+	if itemInCollection("dwarf", races) && itemInCollection("elf", races) {
+		char1.Race = char2.Race
+	}
+
+	if char1.Gender != char2.Gender {
+		canHaveChildren = true
+	}
+
+	couple := Couple{char1, char2, canHaveChildren}
+
+	return couple
+}
+
 // GenerateFamily generates a random family
 func GenerateFamily() Family {
-	mother := Character{}
-	father := Character{}
 	child := Character{}
 	children := []Character{}
 
-	mother = Generate()
-	mother.Gender = "female"
+	parents := GenerateCouple()
 
-	father = Generate()
-	father.Gender = "male"
+	parents.Partner1.LastName = parents.Partner2.LastName
+	familyName := parents.Partner2.LastName
 
-	mother.LastName = father.LastName
-
-	for i := 0; i < rand.Intn(6); i++ {
-		child = Generate()
-		child.LastName = father.LastName
-		child.Race = raceFromParents(father, mother)
-		children = append(children, child)
+	if parents.CanHaveChildren {
+		for i := 0; i < rand.Intn(6); i++ {
+			child = Generate()
+			child.LastName = familyName
+			child.Race = getRaceFromParents(parents.Partner2, parents.Partner1)
+			children = append(children, child)
+		}
 	}
 
-	return Family{father, mother, children}
+	return Family{familyName, parents, children}
 }

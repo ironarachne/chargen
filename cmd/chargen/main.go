@@ -12,7 +12,7 @@ import (
 )
 
 func displayCharacter(char chargen.Character) {
-	fmt.Println("Name: " + char.FirstName + " " + char.LastName)
+	fmt.Println("\nName: " + char.FirstName + " " + char.LastName)
 	fmt.Println("Hair: " + char.HairColor + ", " + char.HairStyle)
 	fmt.Println("Eyes: " + char.EyeColor)
 	fmt.Println("Face Shape: " + char.FaceShape)
@@ -31,15 +31,16 @@ func displayCharacter(char chargen.Character) {
 }
 
 func displayFamily(family chargen.Family) {
-	fmt.Println("# The " + family.Father.LastName + " Family")
-	fmt.Println("## Father")
-	displayCharacter(family.Father)
-	fmt.Println("## Mother")
-	displayCharacter(family.Mother)
-	fmt.Println("## Children")
-	for _, child := range family.Children {
-		displayCharacter(child)
-		fmt.Println("--")
+	fmt.Println("# The " + family.FamilyName + " Family")
+	fmt.Println("\n## Parents")
+	displayCharacter(family.Parents.Partner1)
+	displayCharacter(family.Parents.Partner2)
+
+	if len(family.Children) > 0 {
+		fmt.Println("\n## Children")
+		for _, child := range family.Children {
+			displayCharacter(child)
+		}
 	}
 }
 
