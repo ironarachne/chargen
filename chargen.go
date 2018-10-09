@@ -19,9 +19,13 @@ type Character struct {
 	Motivation          string
 }
 
-func randomHeight(race string) int {
+func randomHeight(race string, gender string) int {
 	minHeight := 0
 	maxHeight := 1
+  genderRatio := 1.0
+  if gender == "male" {
+    genderRatio = 1.08
+  }
 
 	if race == "human" {
 		minHeight = 65
@@ -34,12 +38,18 @@ func randomHeight(race string) int {
 		maxHeight = 55
 	}
 
-	return rand.Intn(maxHeight-minHeight) + minHeight
+  height := rand.Intn(maxHeight-minHeight) + minHeight
+
+  return int(float64(height) * genderRatio)
 }
 
-func randomWeight(race string) int {
+func randomWeight(race string, gender string) int {
 	minWeight := 0
 	maxWeight := 1
+  genderRatio := 1.0
+  if gender == "male" {
+    genderRatio = 1.16
+  }
 
 	if race == "human" {
 		minWeight = 140
@@ -52,7 +62,9 @@ func randomWeight(race string) int {
 		maxWeight = 300
 	}
 
-	return rand.Intn(maxWeight-minWeight) + minWeight
+  weight := rand.Intn(maxWeight-minWeight) + minWeight
+
+  return int(float64(weight) * genderRatio)
 }
 
 // Generate generates a random character
@@ -74,8 +86,8 @@ func Generate() Character {
 		char.PsychologicalTraits = append(char.PsychologicalTraits, randomItem(traits))
 	}
 
-	char.Height = randomHeight(char.Race)
-	char.Weight = randomWeight(char.Race)
+	char.Height = randomHeight(char.Race, char.Gender)
+	char.Weight = randomWeight(char.Race, char.Gender)
 
 	return char
 }
