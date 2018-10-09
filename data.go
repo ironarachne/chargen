@@ -58,12 +58,6 @@ var (
 		"none",
 	}
 
-	orientations = []string{
-		"gay",
-		"straight",
-		"bi",
-	}
-
 	attitudes = []string{
 		"confident",
 		"contemptuous",

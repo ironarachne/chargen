@@ -19,13 +19,27 @@ type Character struct {
 	Motivation          string
 }
 
+func randomOrientation() string {
+	thresholdBi := 5
+	thresholdGay := 15
+
+	result := rand.Intn(100)
+	if result <= thresholdBi {
+		return "bi"
+	} else if result <= thresholdGay {
+		return "gay"
+	} else {
+		return "straight"
+	}
+}
+
 func randomHeight(race string, gender string) int {
 	minHeight := 0
 	maxHeight := 1
-  genderRatio := 1.0
-  if gender == "male" {
-    genderRatio = 1.08
-  }
+	genderRatio := 1.0
+	if gender == "male" {
+		genderRatio = 1.08
+	}
 
 	if race == "human" {
 		minHeight = 65
@@ -38,18 +52,18 @@ func randomHeight(race string, gender string) int {
 		maxHeight = 55
 	}
 
-  height := rand.Intn(maxHeight-minHeight) + minHeight
+	height := rand.Intn(maxHeight-minHeight) + minHeight
 
-  return int(float64(height) * genderRatio)
+	return int(float64(height) * genderRatio)
 }
 
 func randomWeight(race string, gender string) int {
 	minWeight := 0
 	maxWeight := 1
-  genderRatio := 1.0
-  if gender == "male" {
-    genderRatio = 1.16
-  }
+	genderRatio := 1.0
+	if gender == "male" {
+		genderRatio = 1.16
+	}
 
 	if race == "human" {
 		minWeight = 140
@@ -62,9 +76,9 @@ func randomWeight(race string, gender string) int {
 		maxWeight = 300
 	}
 
-  weight := rand.Intn(maxWeight-minWeight) + minWeight
+	weight := rand.Intn(maxWeight-minWeight) + minWeight
 
-  return int(float64(weight) * genderRatio)
+	return int(float64(weight) * genderRatio)
 }
 
 // Generate generates a random character
@@ -77,7 +91,7 @@ func Generate() Character {
 	char.FaceShape = randomItem(faceShapes)
 	char.Race = randomItem(races)
 	char.Gender = randomItem(genders)
-	char.Orientation = randomItem(orientations)
+	char.Orientation = randomOrientation()
 	char.Attitude = randomItem(attitudes)
 	char.Hobby = randomItem(hobbies)
 	char.Motivation = randomItem(motivations)
