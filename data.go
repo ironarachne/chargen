@@ -55,7 +55,6 @@ var (
 	genders = []string{
 		"male",
 		"female",
-		"none",
 	}
 
 	attitudes = []string{
