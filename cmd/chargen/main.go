@@ -30,6 +30,19 @@ func displayCharacter(char chargen.Character) {
 	fmt.Println("Motivation: " + char.Motivation)
 }
 
+func displayFamily(family chargen.Family) {
+	fmt.Println("# The " + family.Father.LastName + " Family")
+	fmt.Println("## Father")
+	displayCharacter(family.Father)
+	fmt.Println("## Mother")
+	displayCharacter(family.Mother)
+	fmt.Println("## Children")
+	for _, child := range family.Children {
+		displayCharacter(child)
+		fmt.Println("--")
+	}
+}
+
 func formatHeight(height int) string {
 	feet := int(math.Floor(float64(height) / 12.0))
 	inches := int(math.Mod(float64(height), 12.0))
@@ -38,7 +51,10 @@ func formatHeight(height int) string {
 }
 
 func main() {
+	typeOfGeneration := flag.String("t", "individual", "Type to generate: individual or family")
 	randomSeed := flag.Int64("s", 0, "Optional random generator seed")
+
+	flag.Parse()
 
 	if *randomSeed == 0 {
 		rand.Seed(time.Now().UnixNano())
@@ -46,7 +62,11 @@ func main() {
 		rand.Seed(*randomSeed)
 	}
 
-	character := chargen.Generate()
-
-	displayCharacter(character)
+	if *typeOfGeneration == "individual" {
+		character := chargen.Generate()
+		displayCharacter(character)
+	} else if *typeOfGeneration == "family" {
+		family := chargen.GenerateFamily()
+		displayFamily(family)
+	}
 }
