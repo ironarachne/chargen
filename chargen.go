@@ -71,7 +71,11 @@ func Generate() Character {
 	char.Motivation = randomItem(motivations)
 
 	for i := 0; i < 2; i++ {
-		char.PsychologicalTraits = append(char.PsychologicalTraits, randomItem(traits))
+		trait := randomItem(traits)
+		for itemInCollection(trait, char.PsychologicalTraits) {
+			trait = randomItem(traits)
+		}
+		char.PsychologicalTraits = append(char.PsychologicalTraits, trait)
 	}
 
 	char.Height = randomHeight(char.Race)
