@@ -47,12 +47,12 @@ func getOppositeGender(gender string) string {
 	return "male"
 }
 
-func getRaceFromParents(father Character, mother Character) Race {
-	if father.Race.Name == mother.Race.Name {
-		return father.Race
+func getRaceFromParents(parents Couple) Race {
+	if parents.Partner1.Race.Name == parents.Partner2.Race.Name {
+		return parents.Partner1.Race
 	}
 
-	possibleRaces := []string{father.Race.Name, mother.Race.Name}
+	possibleRaces := []string{parents.Partner1.Race.Name, parents.Partner2.Race.Name}
 
 	if itemInCollection("elf", possibleRaces) && itemInCollection("human", possibleRaces) {
 		return races["half-elf"]
@@ -111,8 +111,8 @@ func randomWeight(race Race, gender string) int {
 	return int(float64(weight) * genderRatio)
 }
 
-// Generate generates a random character
-func Generate() Character {
+// GenerateCharacter generates a random character
+func GenerateCharacter() Character {
 	char := Character{}
 	nameGenerator := namegen.NameGeneratorFromType("anglosaxon")
 
@@ -146,8 +146,8 @@ func Generate() Character {
 
 // GenerateCouple generates a couple
 func GenerateCouple() Couple {
-	char1 := Generate()
-	char2 := Generate()
+	char1 := GenerateCharacter()
+	char2 := GenerateCharacter()
 	canHaveChildren := false
 
 	raceNames := []string{char1.Race.Name, char2.Race.Name}
@@ -182,6 +182,16 @@ func GenerateCouple() Couple {
 	return couple
 }
 
+// GenerateChild generates a child character for a couple
+func GenerateChild(couple Couple) Character {
+	child := Character{}
+
+	child.LastName = couple.Partner1.LastName
+	child.Race = getRaceFromParents(couple)
+
+	return child
+}
+
 // GenerateFamily generates a random family
 func GenerateFamily() Family {
 	child := Character{}
@@ -189,14 +199,14 @@ func GenerateFamily() Family {
 
 	parents := GenerateCouple()
 
-	parents.Partner1.LastName = parents.Partner2.LastName
-	familyName := parents.Partner2.LastName
+	familyName := parents.Partner1.LastName
+
+	parents.Partner2.LastName = familyName
 
 	if parents.CanHaveChildren {
 		for i := 0; i < rand.Intn(6); i++ {
-			child = Generate()
+			child = GenerateChild(parents)
 			child.LastName = familyName
-			child.Race = getRaceFromParents(parents.Partner2, parents.Partner1)
 			children = append(children, child)
 		}
 	}

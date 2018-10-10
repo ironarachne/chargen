@@ -64,7 +64,7 @@ func main() {
 	}
 
 	if *typeOfGeneration == "individual" {
-		character := chargen.Generate()
+		character := chargen.GenerateCharacter()
 		displayCharacter(character)
 	} else if *typeOfGeneration == "family" {
 		family := chargen.GenerateFamily()
