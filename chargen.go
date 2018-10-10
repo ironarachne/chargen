@@ -51,6 +51,14 @@ func raceFromParents(father Character, mother Character) string {
 		return "dwelf"
 	}
 
+	if itemInCollection("half-elf", races) {
+		return "half-elf"
+	}
+
+	if itemInCollection("half-dwarf", races) {
+		return "half-dwarf"
+	}
+
 	return "abomination"
 }
 
@@ -93,17 +101,7 @@ func randomHeight(race string, gender string) int {
 }
 
 func randomRace() string {
-	thresholdDwarf := 10
-	thresholdElf := 20
-
-	result := rand.Intn(100)
-	if result <= thresholdDwarf {
-		return "dwarf"
-	} else if result <= thresholdElf {
-		return "elf"
-	} else {
-		return "human"
-	}
+	return randomItemFromThresholdMap(raceData)
 }
 
 func randomWeight(race string, gender string) int {
