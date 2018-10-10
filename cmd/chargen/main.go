@@ -18,7 +18,7 @@ func displayCharacter(char chargen.Character) {
 	fmt.Println("Face Shape: " + char.FaceShape)
 	fmt.Println("Height: " + formatHeight(char.Height))
 	fmt.Println("Weight: " + strconv.Itoa(char.Weight) + " lbs")
-	fmt.Println("Race: " + char.Race)
+	fmt.Println("Race: " + char.Race.Name)
 	fmt.Println("Gender: " + char.Gender)
 	fmt.Println("Orientation: " + char.Orientation)
 	fmt.Println("Attitude: " + char.Attitude)

@@ -1,49 +1,10 @@
 package chargen
 
 var (
-	hairColors = []string{
-		"black",
-		"brown",
-		"auburn",
-		"blonde",
-		"red",
-		"jet black",
-		"dark brown",
-		"light brown",
-		"white",
-		"grey",
-	}
-
-	hairStyles = []string{
-		"bald",
-		"short-cropped",
-		"shoulder-length",
-		"long",
-		"spikey",
-		"wavey",
-		"cornrows",
-		"bobbed",
-		"ponytail",
-		"topknot",
-		"waist-length",
-	}
-
-	eyeColors = []string{
-		"amber",
-		"blue",
-		"brown",
-		"hazel",
-		"green",
-		"emerald",
-		"silver",
-	}
-
-	faceShapes = []string{
-		"oval",
-		"thin",
-		"round",
-		"chiseled",
-		"square",
+	orientations = map[string]int{
+		"straight": 10,
+		"gay":      1,
+		"bi":       1,
 	}
 
 	genders = []string{

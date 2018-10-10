@@ -16,7 +16,7 @@ type Character struct {
 	FaceShape           string
 	Height              int
 	Weight              int
-	Race                string
+	Race                Race
 	Gender              string
 	Orientation         string
 	Attitude            string
@@ -47,53 +47,39 @@ func getOppositeGender(gender string) string {
 	return "male"
 }
 
-func getRaceFromParents(father Character, mother Character) string {
-	if father.Race == mother.Race {
+func getRaceFromParents(father Character, mother Character) Race {
+	if father.Race.Name == mother.Race.Name {
 		return father.Race
 	}
 
-	races := []string{father.Race, mother.Race}
+	possibleRaces := []string{father.Race.Name, mother.Race.Name}
 
-	if itemInCollection("elf", races) && itemInCollection("human", races) {
-		return "half-elf"
+	if itemInCollection("elf", possibleRaces) && itemInCollection("human", possibleRaces) {
+		return races["half-elf"]
 	}
 
-	if itemInCollection("dwarf", races) && itemInCollection("human", races) {
-		return "half-dwarf"
+	if itemInCollection("dwarf", possibleRaces) && itemInCollection("human", possibleRaces) {
+		return races["half-dwarf"]
 	}
 
-	if itemInCollection("dwarf", races) && itemInCollection("elf", races) {
-		return "dwelf"
+	if itemInCollection("half-elf", possibleRaces) {
+		return races["half-elf"]
 	}
 
-	if itemInCollection("half-elf", races) {
-		return "half-elf"
+	if itemInCollection("half-dwarf", possibleRaces) {
+		return races["half-dwarf"]
 	}
 
-	if itemInCollection("half-dwarf", races) {
-		return "half-dwarf"
-	}
-
-	return "abomination"
+	return races["human"]
 }
 
 func randomOrientation() string {
-	thresholdBi := 5
-	thresholdGay := 15
-
-	result := rand.Intn(100)
-	if result <= thresholdBi {
-		return "bi"
-	} else if result <= thresholdGay {
-		return "gay"
-	} else {
-		return "straight"
-	}
+	return randomItemFromThresholdMap(orientations)
 }
 
-func randomHeight(race string, gender string) int {
-	minHeight := races[race].MinHeight
-	maxHeight := races[race].MaxHeight
+func randomHeight(race Race, gender string) int {
+	minHeight := race.MinHeight
+	maxHeight := race.MaxHeight
 	genderRatio := 1.0
 	if gender == "male" {
 		genderRatio = 1.08
@@ -104,13 +90,17 @@ func randomHeight(race string, gender string) int {
 	return int(float64(height) * genderRatio)
 }
 
-func randomRace() string {
-	return randomItemFromThresholdMap(raceData)
+func randomRace() Race {
+	raceName := randomItemFromThresholdMap(raceData)
+
+	race := races[raceName]
+
+	return race
 }
 
-func randomWeight(race string, gender string) int {
-	minWeight := races[race].MinWeight
-	maxWeight := races[race].MaxWeight
+func randomWeight(race Race, gender string) int {
+	minWeight := race.MinWeight
+	maxWeight := race.MaxWeight
 	genderRatio := 1.0
 	if gender == "male" {
 		genderRatio = 1.16
@@ -129,10 +119,10 @@ func Generate() Character {
 	char.Race = randomRace()
 	char.FirstName = nameGenerator.FirstName()
 	char.LastName = nameGenerator.LastName()
-	char.HairColor = randomItemFromThresholdMap(races[char.Race].HairColors)
-	char.HairStyle = randomItemFromThresholdMap(races[char.Race].HairStyles)
-	char.EyeColor = randomItemFromThresholdMap(races[char.Race].EyeColors)
-	char.FaceShape = randomItemFromThresholdMap(races[char.Race].FaceShapes)
+	char.HairColor = randomItemFromThresholdMap(char.Race.HairColors)
+	char.HairStyle = randomItemFromThresholdMap(char.Race.HairStyles)
+	char.EyeColor = randomItemFromThresholdMap(char.Race.EyeColors)
+	char.FaceShape = randomItemFromThresholdMap(char.Race.FaceShapes)
 
 	char.Gender = randomItem(genders)
 	char.Orientation = randomOrientation()
@@ -160,7 +150,7 @@ func GenerateCouple() Couple {
 	char2 := Generate()
 	canHaveChildren := false
 
-	races := []string{char1.Race, char2.Race}
+	raceNames := []string{char1.Race.Name, char2.Race.Name}
 	orientations := []string{char1.Orientation, char2.Orientation}
 
 	if (char1.Orientation == "gay" && char2.Orientation == "straight") || (char1.Orientation == "straight" && char2.Orientation == "gay") {
@@ -174,13 +164,13 @@ func GenerateCouple() Couple {
 		char2.Gender = char1.Gender
 	}
 
-	if itemInCollection("dwarf", races) && itemInCollection("elf", races) {
+	if itemInCollection("dwarf", raceNames) && itemInCollection("elf", raceNames) {
 		char1.Race = char2.Race
 	}
 
-	if itemInCollection("halfling", races) {
-		char1.Race = "halfling"
-		char2.Race = "halfling"
+	if itemInCollection("halfling", raceNames) {
+		char1.Race = races["halfling"]
+		char2.Race = races["halfling"]
 	}
 
 	if char1.Gender != char2.Gender {
