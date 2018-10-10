@@ -92,22 +92,11 @@ func randomOrientation() string {
 }
 
 func randomHeight(race string, gender string) int {
-	minHeight := 0
-	maxHeight := 1
+	minHeight := races[race].MinHeight
+	maxHeight := races[race].MaxHeight
 	genderRatio := 1.0
 	if gender == "male" {
 		genderRatio = 1.08
-	}
-
-	if race == "human" {
-		minHeight = 65
-		maxHeight = 78
-	} else if race == "elf" {
-		minHeight = 60
-		maxHeight = 70
-	} else if race == "dwarf" {
-		minHeight = 40
-		maxHeight = 55
 	}
 
 	height := rand.Intn(maxHeight-minHeight) + minHeight
@@ -120,22 +109,11 @@ func randomRace() string {
 }
 
 func randomWeight(race string, gender string) int {
-	minWeight := 0
-	maxWeight := 1
+	minWeight := races[race].MinWeight
+	maxWeight := races[race].MaxWeight
 	genderRatio := 1.0
 	if gender == "male" {
 		genderRatio = 1.16
-	}
-
-	if race == "human" {
-		minWeight = 140
-		maxWeight = 230
-	} else if race == "elf" {
-		minWeight = 70
-		maxWeight = 160
-	} else if race == "dwarf" {
-		minWeight = 180
-		maxWeight = 300
 	}
 
 	weight := rand.Intn(maxWeight-minWeight) + minWeight
