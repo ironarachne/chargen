@@ -42,9 +42,9 @@ type Family struct {
 func getOppositeGender(gender string) string {
 	if gender == "male" {
 		return "female"
-	} else {
-		return "male"
 	}
+
+	return "male"
 }
 
 func getRaceFromParents(father Character, mother Character) string {
@@ -126,13 +126,14 @@ func Generate() Character {
 	char := Character{}
 	nameGenerator := namegen.NameGeneratorFromType("anglosaxon")
 
+	char.Race = randomRace()
 	char.FirstName = nameGenerator.FirstName()
 	char.LastName = nameGenerator.LastName()
-	char.HairColor = randomItem(hairColors)
-	char.HairStyle = randomItem(hairStyles)
-	char.EyeColor = randomItem(eyeColors)
-	char.FaceShape = randomItem(faceShapes)
-	char.Race = randomRace()
+	char.HairColor = randomItemFromThresholdMap(races[char.Race].HairColors)
+	char.HairStyle = randomItemFromThresholdMap(races[char.Race].HairStyles)
+	char.EyeColor = randomItemFromThresholdMap(races[char.Race].EyeColors)
+	char.FaceShape = randomItemFromThresholdMap(races[char.Race].FaceShapes)
+
 	char.Gender = randomItem(genders)
 	char.Orientation = randomOrientation()
 	char.Attitude = randomItem(attitudes)
@@ -175,6 +176,11 @@ func GenerateCouple() Couple {
 
 	if itemInCollection("dwarf", races) && itemInCollection("elf", races) {
 		char1.Race = char2.Race
+	}
+
+	if itemInCollection("halfling", races) {
+		char1.Race = "halfling"
+		char2.Race = "halfling"
 	}
 
 	if char1.Gender != char2.Gender {
