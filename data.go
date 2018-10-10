@@ -46,12 +46,6 @@ var (
 		"square",
 	}
 
-	races = []string{
-		"human",
-		"elf",
-		"dwarf",
-	}
-
 	genders = []string{
 		"male",
 		"female",
