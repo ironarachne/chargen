@@ -47,6 +47,20 @@ func getOppositeGender(gender string) string {
 	return "male"
 }
 
+func getAppropriateName(gender string, race Race) (string, string) {
+	nameCategory := "fantasy"
+
+	if race.Name == "elf" {
+		nameCategory = "elf"
+	}
+	nameGenerator := namegen.NameGeneratorFromType(nameCategory)
+
+	firstName := nameGenerator.FirstName(gender)
+	lastName := nameGenerator.LastName()
+
+	return firstName, lastName
+}
+
 func getRaceFromParents(parents Couple) Race {
 	if parents.Partner1.Race.Name == parents.Partner2.Race.Name {
 		return parents.Partner1.Race
@@ -114,17 +128,17 @@ func randomWeight(race Race, gender string) int {
 // GenerateCharacter generates a random character
 func GenerateCharacter() Character {
 	char := Character{}
-	nameGenerator := namegen.NameGeneratorFromType("anglosaxon")
 
 	char.Race = randomRace()
-	char.FirstName = nameGenerator.FirstName()
-	char.LastName = nameGenerator.LastName()
+	char.Gender = randomItem(genders)
+
+	char.FirstName, char.LastName = getAppropriateName(char.Gender, char.Race)
+
 	char.HairColor = randomItemFromThresholdMap(char.Race.HairColors)
 	char.HairStyle = randomItemFromThresholdMap(char.Race.HairStyles)
 	char.EyeColor = randomItemFromThresholdMap(char.Race.EyeColors)
 	char.FaceShape = randomItemFromThresholdMap(char.Race.FaceShapes)
 
-	char.Gender = randomItem(genders)
 	char.Orientation = randomOrientation()
 	char.Attitude = randomItem(attitudes)
 	char.Hobby = randomItem(hobbies)
@@ -160,12 +174,15 @@ func GenerateCouple() Couple {
 
 	if char1.Gender == char2.Gender && itemInCollection("straight", orientations) {
 		char2.Gender = getOppositeGender(char1.Gender)
+		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Race)
 	} else if char1.Gender != char2.Gender && itemInCollection("gay", orientations) {
 		char2.Gender = char1.Gender
+		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Race)
 	}
 
 	if itemInCollection("dwarf", raceNames) && itemInCollection("elf", raceNames) {
 		char1.Race = char2.Race
+		char1.FirstName, _ = getAppropriateName(char1.Gender, char1.Race)
 	}
 
 	if itemInCollection("halfling", raceNames) {
@@ -184,7 +201,7 @@ func GenerateCouple() Couple {
 
 // GenerateChild generates a child character for a couple
 func GenerateChild(couple Couple) Character {
-	child := Character{}
+	child := GenerateCharacter()
 
 	child.LastName = couple.Partner1.LastName
 	child.Race = getRaceFromParents(couple)
