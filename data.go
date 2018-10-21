@@ -1,6 +1,13 @@
 package chargen
 
 var (
+	ageCategories = map[string]int{
+		"adult":       12,
+		"elderly":     1,
+		"young adult": 2,
+		"child":       1,
+	}
+
 	orientations = map[string]int{
 		"straight": 10,
 		"gay":      1,
@@ -8,21 +15,26 @@ var (
 	}
 
 	genders = []string{
-		"male",
 		"female",
+		"male",
 	}
 
-	attitudes = []string{
-		"confident",
-		"contemptuous",
-		"devious",
-		"proud",
-		"optimistic",
-		"pessimistic",
-		"encouraging",
-		"fair",
-		"just",
-		"religious",
+	professions = []string{
+		"alchemist",
+		"baker",
+		"bartender",
+		"blacksmith",
+		"bowyer",
+		"carpenter",
+		"cook",
+		"farmer",
+		"ferrier",
+		"fletcher",
+		"guard",
+		"guildmaster",
+		"healer",
+		"mage",
+		"merchant",
 	}
 
 	hobbies = []string{
@@ -33,25 +45,50 @@ var (
 		"fishing",
 		"hunting",
 		"painting",
+		"drinking",
 	}
 
 	traits = []string{
-		"arrogant",
+		"addict",
 		"anxious",
-		"envious",
-		"stable",
+		"arrogant",
 		"brave",
-		"trusting",
-		"meticulous",
+		"cautious",
+		"confident",
+		"contemptuous",
+		"devious",
+		"drunkard",
+		"encouraging",
+		"envious",
+		"fair",
 		"fierce",
+		"just",
+		"lusty",
+		"meticulous",
+		"optimistic",
+		"persistent",
+		"pessimistic",
+		"proud",
+		"reckless",
+		"religious",
+		"resilient",
+		"sickly",
+		"stable",
+		"strong",
+		"stubborn",
+		"trusting",
+		"wise",
 	}
 
 	motivations = []string{
-		"money",
-		"power",
+		"debauchery",
 		"fame",
 		"family",
 		"friends",
+		"justice",
+		"knowledge",
+		"money",
+		"power",
 		"revenge",
 	}
 )

@@ -43,6 +43,7 @@ var (
 			250,
 			90,
 			18,
+			13,
 		},
 		"elf": Race{
 			"elf",
@@ -77,6 +78,7 @@ var (
 			200,
 			500,
 			100,
+			50,
 		},
 		"dwarf": Race{
 			"dwarf",
@@ -109,6 +111,7 @@ var (
 			300,
 			400,
 			50,
+			25,
 		},
 		"half-elf": Race{
 			"half-elf",
@@ -142,6 +145,7 @@ var (
 			250,
 			200,
 			18,
+			13,
 		},
 		"half-dwarf": Race{
 			"half-dwarf",
@@ -175,6 +179,7 @@ var (
 			250,
 			150,
 			18,
+			13,
 		},
 		"halfling": Race{
 			"halfling",
@@ -204,21 +209,23 @@ var (
 			200,
 			150,
 			20,
+			14,
 		},
 	}
 )
 
 // Race is a character race
 type Race struct {
-	Name       string
-	HairColors map[string]int
-	HairStyles map[string]int
-	EyeColors  map[string]int
-	FaceShapes map[string]int
-	MinHeight  int
-	MaxHeight  int
-	MinWeight  int
-	MaxWeight  int
-	LifeSpan   int
-	AdultAge   int
+	Name         string
+	HairColors   map[string]int
+	HairStyles   map[string]int
+	EyeColors    map[string]int
+	FaceShapes   map[string]int
+	MinHeight    int
+	MaxHeight    int
+	MinWeight    int
+	MaxWeight    int
+	LifeSpan     int
+	AdultAge     int
+	FertilityAge int
 }

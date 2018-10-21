@@ -20,8 +20,10 @@ func displayCharacter(char chargen.Character) {
 	fmt.Println("Weight: " + strconv.Itoa(char.Weight) + " lbs")
 	fmt.Println("Race: " + char.Race.Name)
 	fmt.Println("Gender: " + char.Gender)
+	fmt.Println("Age: " + strconv.Itoa(char.Age))
+	fmt.Println("Age Category: " + char.AgeCategory)
 	fmt.Println("Orientation: " + char.Orientation)
-	fmt.Println("Attitude: " + char.Attitude)
+	fmt.Println("Profession: " + char.Profession)
 	fmt.Println("Traits: ")
 	for _, trait := range char.PsychologicalTraits {
 		fmt.Println("- " + trait)
