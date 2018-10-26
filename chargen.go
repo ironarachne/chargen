@@ -268,6 +268,19 @@ func GenerateCouple() Couple {
 	return couple
 }
 
+// GenerateAdultDescendent generates an adult character based on a couple
+func GenerateAdultDescendent(couple Couple) Character {
+	descendent := GenerateCharacter()
+
+	descendent.LastName = couple.Partner1.LastName
+	descendent.Race = getRaceFromParents(couple)
+
+	descendent.Age = getRandomAge(descendent.Race, "adult")
+	descendent.AgeCategory = getAgeCategoryFromAge(descendent.Age, descendent.Race)
+
+	return descendent
+}
+
 // GenerateChild generates a child character for a couple
 func GenerateChild(couple Couple) Character {
 	child := GenerateCharacter()
@@ -281,6 +294,24 @@ func GenerateChild(couple Couple) Character {
 	}
 
 	return child
+}
+
+// GenerateCompatibleMate generates a character appropriate as a mate for another
+func GenerateCompatibleMate(char Character) Character {
+	mate := GenerateCharacter()
+
+	mate.Age = getRandomAge(mate.Race, char.AgeCategory)
+	mate.AgeCategory = getAgeCategoryFromAge(mate.Age, mate.Race)
+
+	if char.Orientation == "straight" {
+		mate.Gender = getOppositeGender(char.Gender)
+		mate.Orientation = "straight"
+	} else {
+		mate.Gender = char.Gender
+		mate.Orientation = "gay"
+	}
+
+	return mate
 }
 
 // GenerateFamily generates a random family
@@ -303,4 +334,15 @@ func GenerateFamily() Family {
 	}
 
 	return Family{familyName, parents, children}
+}
+
+// MarryCouple returns a couple from two characters
+func MarryCouple(partner1 Character, partner2 Character) Couple {
+	canHaveChildren := false
+
+	if partner1.Gender != partner2.Gender {
+		canHaveChildren = true
+	}
+
+	return Couple{partner1, partner2, canHaveChildren}
 }
