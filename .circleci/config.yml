@@ -5,22 +5,35 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version
       - image: circleci/golang:1.11
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    #### TEMPLATE_NOTE: go expects specific checkout path representing url
-    #### expecting it in the form of
-    ####   /go/src/github.com/circleci/go-tool
-    ####   /go/src/bitbucket.org/circleci/go-tool
     working_directory: /go/src/github.com/ironarachne/chargen
     steps:
       - checkout
-
-      # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: |
+          cd cmd/chargend
+          TAG=0.1.$CIRCLE_BUILD_NUM
+          docker build -t ironarachne/chargend:$TAG -t ironarachne/chargend:latest .
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker push ironarachne/chargend:$TAG
+          docker push ironarachne/chargend:latest
+  deploy:
+    machine:
+        enabled: true
+    steps:
+      - run: curl -X POST 'https://portainer.ironarachne.com/api/webhooks/'
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

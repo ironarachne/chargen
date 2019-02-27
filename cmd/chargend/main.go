@@ -30,7 +30,7 @@ var (
 		"faceShape": "{{ .FaceShape }}",
 		"motivation": "{{ .Motivation }}",
 		"hobby": "{{ .Hobby }}",
-		
+
 		"traits": [
 			{{ range $i, $t := .PsychologicalTraits }}
 			"{{ $t }}"{{ if ne (add $i 1) $traitsLength }},{{ end }}

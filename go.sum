@@ -1,0 +1,4 @@
+github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f h1:ojeQHdbLs7BMNJD4kDTH7H/wBLkRRxwMKBI3Tjr3VNo=
+github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f/go.mod h1:eyp4WtK269tAXz/Q80hVD+h+wcbqDeYpuQ+fKuByBVE=
+github.com/ironarachne/utility v0.0.0-20181021125830-32a6c250e33b h1:EhG1yiJbIUwbHhtAAqoPxW0ClJnE9W5HLSyHSu9gVk8=
+github.com/ironarachne/utility v0.0.0-20181021125830-32a6c250e33b/go.mod h1:1pbHvjC5wh3M6kSUB46xHYUnWZ1iMqr8h/07w0n2Gak=
