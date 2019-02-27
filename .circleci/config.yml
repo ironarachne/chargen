@@ -24,7 +24,7 @@ jobs:
     machine:
         enabled: true
     steps:
-      - run: curl -X POST 'https://portainer.ironarachne.com/api/webhooks/'
+      - run: curl -X POST 'https://portainer.ironarachne.com/api/webhooks/5131af34-6dbc-406c-b997-1a84f68cbcd9'
 
 workflows:
   version: 2
