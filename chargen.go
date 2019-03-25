@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/ironarachne/random"
 	"github.com/ironarachne/utility"
 
 	"github.com/ironarachne/namegen"
@@ -144,7 +145,7 @@ func getRaceFromParents(parents Couple) Race {
 }
 
 func randomOrientation() string {
-	return utility.RandomItemFromThresholdMap(orientations)
+	return random.ItemFromThresholdMap(orientations)
 }
 
 func randomHeight(race Race, gender string) int {
@@ -161,7 +162,7 @@ func randomHeight(race Race, gender string) int {
 }
 
 func randomRace() Race {
-	raceName := utility.RandomItemFromThresholdMap(raceData)
+	raceName := random.ItemFromThresholdMap(raceData)
 
 	race := races[raceName]
 
@@ -186,27 +187,27 @@ func GenerateCharacter() Character {
 	char := Character{}
 
 	char.Race = randomRace()
-	char.Gender = utility.RandomItem(genders)
+	char.Gender = random.Item(genders)
 
 	char.FirstName, char.LastName = getAppropriateName(char.Gender, char.Race)
 
-	char.AgeCategory = utility.RandomItemFromThresholdMap(ageCategories)
+	char.AgeCategory = random.ItemFromThresholdMap(ageCategories)
 	char.Age = getRandomAge(char.Race, char.AgeCategory)
 
-	char.HairColor = utility.RandomItemFromThresholdMap(char.Race.HairColors)
-	char.HairStyle = utility.RandomItemFromThresholdMap(char.Race.HairStyles)
-	char.EyeColor = utility.RandomItemFromThresholdMap(char.Race.EyeColors)
-	char.FaceShape = utility.RandomItemFromThresholdMap(char.Race.FaceShapes)
+	char.HairColor = random.ItemFromThresholdMap(char.Race.HairColors)
+	char.HairStyle = random.ItemFromThresholdMap(char.Race.HairStyles)
+	char.EyeColor = random.ItemFromThresholdMap(char.Race.EyeColors)
+	char.FaceShape = random.ItemFromThresholdMap(char.Race.FaceShapes)
 
 	char.Orientation = randomOrientation()
-	char.Profession = utility.RandomItem(professions)
-	char.Hobby = utility.RandomItem(hobbies)
-	char.Motivation = utility.RandomItem(motivations)
+	char.Profession = random.Item(professions)
+	char.Hobby = random.Item(hobbies)
+	char.Motivation = random.Item(motivations)
 
 	for i := 0; i < 2; i++ {
-		trait := utility.RandomItem(traits)
+		trait := random.Item(traits)
 		for utility.ItemInCollection(trait, char.PsychologicalTraits) {
-			trait = utility.RandomItem(traits)
+			trait = random.Item(traits)
 		}
 		char.PsychologicalTraits = append(char.PsychologicalTraits, trait)
 	}
