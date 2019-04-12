@@ -1,63 +1,56 @@
 package main
 
 import (
-	"html/template"
+	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/ironarachne/chargen"
+	"github.com/ironarachne/random"
 )
 
-var (
-	jsonTemplate = `
-	{{ $traitsLength := (len .PsychologicalTraits) }}
-	{
-		"firstName": "{{ .FirstName }}",
-		"lastName": "{{ .LastName }}",
-		"race": "{{ .Race.Name }}",
-		"age": {{ .Age }},
-		"ageCategory": "{{ .AgeCategory }}",
-		"gender": "{{ .Gender }}",
-		"orientation": "{{ .Orientation }}",
-		"profession": "{{ .Profession }}",
-		"height": {{ .Height }},
-		"weight": {{ .Weight }},
-		"hairColor": "{{ .HairColor }}",
-		"hairStyle": "{{ .HairStyle }}",
-		"eyeColor": "{{ .EyeColor }}",
-		"faceShape": "{{ .FaceShape }}",
-		"motivation": "{{ .Motivation }}",
-		"hobby": "{{ .Hobby }}",
+func getCharacter(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
 
-		"traits": [
-			{{ range $i, $t := .PsychologicalTraits }}
-			"{{ $t }}"{{ if ne (add $i 1) $traitsLength }},{{ end }}
-			{{ end }}
-		]
-	}
-	`
-)
+	var newChar chargen.Character
 
-func check(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
+	random.SeedFromString(id)
+
+	newChar = chargen.GenerateCharacter()
+
+	json.NewEncoder(w).Encode(newChar)
+}
+
+func getCharacterRandom(w http.ResponseWriter, r *http.Request) {
+	var newChar chargen.Character
+
+	rand.Seed(time.Now().UnixNano())
+
+	newChar = chargen.GenerateCharacter()
+
+	json.NewEncoder(w).Encode(newChar)
 }
 
 func main() {
-	rootHandler := func(w http.ResponseWriter, req *http.Request) {
-		rand.Seed(time.Now().UnixNano())
+	r := chi.NewRouter()
 
-		tmpl, err := template.New("webpage").Funcs(template.FuncMap{"add": func(a, b int) int { return a + b }}).Parse(jsonTemplate)
-		check(err)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.URLFormat)
+	r.Use(middleware.SetHeader("Content-Type", "application/json"))
 
-		character := chargen.GenerateCharacter()
+	r.Use(middleware.Timeout(60 * time.Second))
 
-		tmpl.Execute(w, character)
-	}
+	r.Get("/", getCharacterRandom)
+	r.Get("/{id}", getCharacter)
 
-	http.HandleFunc("/", rootHandler)
-	log.Fatal(http.ListenAndServe(":9798", nil))
+	fmt.Println("Character Generator API is online.")
+	log.Fatal(http.ListenAndServe(":9798", r))
 }

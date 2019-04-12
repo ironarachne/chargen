@@ -7,7 +7,7 @@ import (
 	"github.com/ironarachne/random"
 	"github.com/ironarachne/utility"
 
-	"github.com/ironarachne/namegen"
+	"github.com/ironarachne/culturegen"
 )
 
 // Character is a character
@@ -18,6 +18,7 @@ type Character struct {
 	HairStyle           string
 	EyeColor            string
 	FaceShape           string
+	Culture             culturegen.Culture
 	Height              int
 	Weight              int
 	Race                Race
@@ -53,16 +54,9 @@ func getOppositeGender(gender string) string {
 	return "male"
 }
 
-func getAppropriateName(gender string, race Race) (string, string) {
-	nameCategory := "fantasy"
-
-	if race.Name == "elf" {
-		nameCategory = "elf"
-	}
-	nameGenerator := namegen.NameGeneratorFromType(nameCategory)
-
-	firstName := nameGenerator.FirstName(gender)
-	lastName := nameGenerator.LastName()
+func getAppropriateName(gender string, culture culturegen.Culture) (string, string) {
+	firstName := culture.Language.RandomGenderedName(gender)
+	lastName := culture.Language.RandomName()
 
 	return firstName, lastName
 }
@@ -188,8 +182,9 @@ func GenerateCharacter() Character {
 
 	char.Race = randomRace()
 	char.Gender = random.Item(genders)
+	char.Culture = culturegen.GenerateCulture()
 
-	char.FirstName, char.LastName = getAppropriateName(char.Gender, char.Race)
+	char.FirstName, char.LastName = getAppropriateName(char.Gender, char.Culture)
 
 	char.AgeCategory = random.ItemFromThresholdMap(ageCategories)
 	char.Age = getRandomAge(char.Race, char.AgeCategory)
@@ -218,6 +213,14 @@ func GenerateCharacter() Character {
 	return char
 }
 
+// GenerateCharacterOfCulture generates a random character with a given culture
+func GenerateCharacterOfCulture(culture culturegen.Culture) Character {
+	character := GenerateCharacter()
+	character = character.SetCulture(culture)
+
+	return character
+}
+
 // GenerateCouple generates a couple
 func GenerateCouple() Couple {
 	char1 := GenerateCharacter()
@@ -244,15 +247,15 @@ func GenerateCouple() Couple {
 
 	if char1.Gender == char2.Gender && utility.ItemInCollection("straight", orientations) {
 		char2.Gender = getOppositeGender(char1.Gender)
-		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Race)
+		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Culture)
 	} else if char1.Gender != char2.Gender && utility.ItemInCollection("gay", orientations) {
 		char2.Gender = char1.Gender
-		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Race)
+		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Culture)
 	}
 
 	if utility.ItemInCollection("dwarf", raceNames) && utility.ItemInCollection("elf", raceNames) {
 		char1.Race = char2.Race
-		char1.FirstName, _ = getAppropriateName(char1.Gender, char1.Race)
+		char1.FirstName, _ = getAppropriateName(char1.Gender, char1.Culture)
 	}
 
 	if utility.ItemInCollection("halfling", raceNames) {
@@ -346,4 +349,14 @@ func MarryCouple(partner1 Character, partner2 Character) Couple {
 	}
 
 	return Couple{partner1, partner2, canHaveChildren}
+}
+
+// SetCulture sets the culture of the character
+func (character Character) SetCulture(culture culturegen.Culture) Character {
+	newCharacter := character
+
+	newCharacter.Culture = culture
+	newCharacter.FirstName, newCharacter.LastName = getAppropriateName(newCharacter.Gender, newCharacter.Culture)
+
+	return newCharacter
 }
