@@ -20,6 +20,8 @@ github.com/ironarachne/culturegen v0.0.0-20190412170136-7dd76321ba4a h1:teKeoq+Z
 github.com/ironarachne/culturegen v0.0.0-20190412170136-7dd76321ba4a/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
 github.com/ironarachne/culturegen v0.0.0-20190412183421-e03e4bad945c h1:iB9tHn0ZQ2sRusQhhlTSDpQGHsyHC+vwp2FUSxwU/MI=
 github.com/ironarachne/culturegen v0.0.0-20190412183421-e03e4bad945c/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
+github.com/ironarachne/culturegen v0.0.0-20190412195431-e35bbec0f3a4 h1:gNXXzmt90Dgtofp6uvQLXH43lia5U31HlV9JLBupdL0=
+github.com/ironarachne/culturegen v0.0.0-20190412195431-e35bbec0f3a4/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
 github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f h1:ojeQHdbLs7BMNJD4kDTH7H/wBLkRRxwMKBI3Tjr3VNo=
 github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f/go.mod h1:eyp4WtK269tAXz/Q80hVD+h+wcbqDeYpuQ+fKuByBVE=
 github.com/ironarachne/namegen v0.0.0-20190309164720-ff7d64aed378 h1:aapy0hwbvM8gP1rcmXC1t1UiZ37qJzBrw/qbEu/RXCU=
