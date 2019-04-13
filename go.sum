@@ -22,6 +22,10 @@ github.com/ironarachne/culturegen v0.0.0-20190412183421-e03e4bad945c h1:iB9tHn0Z
 github.com/ironarachne/culturegen v0.0.0-20190412183421-e03e4bad945c/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
 github.com/ironarachne/culturegen v0.0.0-20190412195431-e35bbec0f3a4 h1:gNXXzmt90Dgtofp6uvQLXH43lia5U31HlV9JLBupdL0=
 github.com/ironarachne/culturegen v0.0.0-20190412195431-e35bbec0f3a4/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
+github.com/ironarachne/culturegen v0.0.0-20190413113308-97dd9c54f06d h1:O9uCzE270UHZ+NCopZ2xJMsG9Hw22voBM0X+DlCd+cc=
+github.com/ironarachne/culturegen v0.0.0-20190413113308-97dd9c54f06d/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
+github.com/ironarachne/culturegen v0.0.0-20190413123406-71a9472133da h1:qvoJwtUJegOrfNHui7ucMp4h1g2dfEEzL5KtQ/hkCfA=
+github.com/ironarachne/culturegen v0.0.0-20190413123406-71a9472133da/go.mod h1:4/V2X1Jr1SqZPDwoYchv4mZW/rY51Xa+4r2nLE2x2R0=
 github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f h1:ojeQHdbLs7BMNJD4kDTH7H/wBLkRRxwMKBI3Tjr3VNo=
 github.com/ironarachne/namegen v0.0.0-20181025152707-2bd82e456d8f/go.mod h1:eyp4WtK269tAXz/Q80hVD+h+wcbqDeYpuQ+fKuByBVE=
 github.com/ironarachne/namegen v0.0.0-20190309164720-ff7d64aed378 h1:aapy0hwbvM8gP1rcmXC1t1UiZ37qJzBrw/qbEu/RXCU=
@@ -71,6 +75,7 @@ golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5h
 golang.org/x/sys v0.0.0-20190322080309-f49334f85ddc/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190403152447-81d4e9dc473e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190411185658-b44545bcd369/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/tools v0.0.0-20181221001348-537d06c36207/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
 golang.org/x/tools v0.0.0-20190325161752-5a8dccf5b48a/go.mod h1:LCzVGOaR6xXOjkQ3onu1FJEFr0SW1gC7cKk1uF8kGRs=

@@ -1,7 +1,6 @@
 package chargen
 
 import (
-	"math"
 	"math/rand"
 
 	"github.com/ironarachne/random"
@@ -14,22 +13,24 @@ import (
 type Character struct {
 	FirstName           string
 	LastName            string
-	HairColor           string
-	HairStyle           string
-	EyeColor            string
-	FaceShape           string
-	Culture             culturegen.Culture
-	Height              int
-	Weight              int
-	Race                Race
+	Gender              string
 	Age                 int
 	AgeCategory         string
-	Gender              string
 	Orientation         string
+	Height              int
+	Weight              int
 	Profession          string
-	Hobby               string
+	Hobby               Hobby
 	PsychologicalTraits []string
 	Motivation          string
+	HairColor           string
+	HairStyle           string
+	FacialHair          string
+	EyeColor            string
+	FaceShape           string
+	MouthShape          string
+	NoseShape           string
+	Culture             culturegen.Culture
 }
 
 // Couple is a pair of partners
@@ -61,40 +62,46 @@ func getAppropriateName(gender string, culture culturegen.Culture) (string, stri
 	return firstName, lastName
 }
 
-func getAgeCategoryRange(race Race, ageCategory string) (int, int) {
-	minAge := 1
+func getAgeCategoryRange(ageCategory string) (int, int) {
+	minAge := 0
 	maxAge := 1
 
-	if ageCategory == "child" {
-		minAge = 1
-		maxAge = race.FertilityAge - 1
+	if ageCategory == "infant" {
+		minAge = 0
+		maxAge = 1
+	} else if ageCategory == "child" {
+		minAge = 2
+		maxAge = 12
+	} else if ageCategory == "teenager" {
+		minAge = 13
+		maxAge = 19
 	} else if ageCategory == "young adult" {
-		minAge = race.FertilityAge
-		maxAge = race.AdultAge - 1
+		minAge = 20
+		maxAge = 25
 	} else if ageCategory == "adult" {
-		minAge = race.AdultAge
-		maxAge = int(math.Floor(float64(race.LifeSpan)*0.85)) - 1
+		minAge = 26
+		maxAge = 69
 	} else if ageCategory == "elderly" {
-		minAge = int(math.Floor(float64(race.LifeSpan) * 0.85))
-		maxAge = race.LifeSpan
+		minAge = 70
+		maxAge = 110
 	}
 
 	return minAge, maxAge
 }
 
-func getRandomAge(race Race, ageCategory string) int {
-	minAge, maxAge := getAgeCategoryRange(race, ageCategory)
+func getRandomAge(ageCategory string) int {
+	minAge, maxAge := getAgeCategoryRange(ageCategory)
 
 	return rand.Intn(maxAge-minAge) + minAge
 }
 
-func getAgeCategoryFromAge(age int, race Race) string {
+func getAgeCategoryFromAge(age int) string {
 	ageCategory := ""
 	minAge := 0
 	maxAge := 0
 
 	for category := range ageCategories {
-		minAge, maxAge = getAgeCategoryRange(race, category)
+		minAge, maxAge = getAgeCategoryRange(category)
 		if age >= minAge && age <= maxAge {
 			ageCategory = category
 		}
@@ -103,100 +110,100 @@ func getAgeCategoryFromAge(age int, race Race) string {
 	return ageCategory
 }
 
-func getAgeFromParents(parents Couple, race Race) (int, string) {
+func getAgeFromParents(parents Couple) (int, string) {
 	lowestAge := utility.Min(parents.Partner1.Age, parents.Partner2.Age)
 
-	childAge := rand.Intn(lowestAge-race.FertilityAge) + 1
-	childAgeCategory := getAgeCategoryFromAge(childAge, race)
+	childAge := rand.Intn(lowestAge-18) + 1
+	childAgeCategory := getAgeCategoryFromAge(childAge)
 
 	return childAge, childAgeCategory
-}
-
-func getRaceFromParents(parents Couple) Race {
-	if parents.Partner1.Race.Name == parents.Partner2.Race.Name {
-		return parents.Partner1.Race
-	}
-
-	possibleRaces := []string{parents.Partner1.Race.Name, parents.Partner2.Race.Name}
-
-	if utility.ItemInCollection("elf", possibleRaces) && utility.ItemInCollection("human", possibleRaces) {
-		return races["half-elf"]
-	}
-
-	if utility.ItemInCollection("dwarf", possibleRaces) && utility.ItemInCollection("human", possibleRaces) {
-		return races["half-dwarf"]
-	}
-
-	if utility.ItemInCollection("half-elf", possibleRaces) {
-		return races["half-elf"]
-	}
-
-	if utility.ItemInCollection("half-dwarf", possibleRaces) {
-		return races["half-dwarf"]
-	}
-
-	return races["human"]
 }
 
 func randomOrientation() string {
 	return random.ItemFromThresholdMap(orientations)
 }
 
-func randomHeight(race Race, gender string) int {
-	minHeight := race.MinHeight
-	maxHeight := race.MaxHeight
-	genderRatio := 1.0
-	if gender == "male" {
-		genderRatio = 1.08
+func (character Character) randomHeight() int {
+	minHeight := character.Culture.Appearance.MinFemaleHeight
+	maxHeight := character.Culture.Appearance.MaxFemaleHeight
+
+	if character.Gender == "male" {
+		minHeight = character.Culture.Appearance.MinMaleHeight
+		maxHeight = character.Culture.Appearance.MaxMaleHeight
 	}
 
 	height := rand.Intn(maxHeight-minHeight) + minHeight
 
-	return int(float64(height) * genderRatio)
+	if character.AgeCategory == "child" {
+		height = int(float64(height) * 0.6)
+	} else if character.AgeCategory == "infant" {
+		height = int(float64(height) * 0.1)
+	}
+
+	return height
 }
 
-func randomRace() Race {
-	raceName := random.ItemFromThresholdMap(raceData)
+func (character Character) randomWeight() int {
+	minWeight := character.Culture.Appearance.MinFemaleWeight
+	maxWeight := character.Culture.Appearance.MaxFemaleWeight
 
-	race := races[raceName]
-
-	return race
-}
-
-func randomWeight(race Race, gender string) int {
-	minWeight := race.MinWeight
-	maxWeight := race.MaxWeight
-	genderRatio := 1.0
-	if gender == "male" {
-		genderRatio = 1.16
+	if character.Gender == "male" {
+		minWeight = character.Culture.Appearance.MinMaleWeight
+		maxWeight = character.Culture.Appearance.MaxMaleWeight
 	}
 
 	weight := rand.Intn(maxWeight-minWeight) + minWeight
 
-	return int(float64(weight) * genderRatio)
+	if character.AgeCategory == "child" {
+		weight = int(float64(weight) * 0.4)
+	} else if character.AgeCategory == "infant" {
+		weight = int(float64(weight) * 0.1)
+	}
+
+	return weight
+}
+
+func (character Character) randomFacialHair() string {
+	if character.Gender == "female" {
+		return "none"
+	}
+
+	hairChance := rand.Intn(10)
+	if hairChance > 8 {
+		return random.Item(character.Culture.Appearance.FacialHairStyles)
+	}
+
+	return "none"
 }
 
 // GenerateCharacter generates a random character
 func GenerateCharacter() Character {
 	char := Character{}
 
-	char.Race = randomRace()
 	char.Gender = random.Item(genders)
 	char.Culture = culturegen.GenerateCulture()
 
 	char.FirstName, char.LastName = getAppropriateName(char.Gender, char.Culture)
 
 	char.AgeCategory = random.ItemFromThresholdMap(ageCategories)
-	char.Age = getRandomAge(char.Race, char.AgeCategory)
+	char.Age = getRandomAge(char.AgeCategory)
 
-	char.HairColor = random.ItemFromThresholdMap(char.Race.HairColors)
-	char.HairStyle = random.ItemFromThresholdMap(char.Race.HairStyles)
-	char.EyeColor = random.ItemFromThresholdMap(char.Race.EyeColors)
-	char.FaceShape = random.ItemFromThresholdMap(char.Race.FaceShapes)
+	char.HairColor = random.Item(char.Culture.Appearance.HairColors)
+	if char.Gender == "male" {
+		char.HairStyle = random.Item(char.Culture.Appearance.MaleHairStyles)
+	} else {
+		char.HairStyle = random.Item(char.Culture.Appearance.FemaleHairStyles)
+	}
+	char.FacialHair = char.randomFacialHair()
+
+	char.EyeColor = random.Item(char.Culture.Appearance.EyeColors)
+	char.FaceShape = char.Culture.Appearance.FaceShape
+	char.MouthShape = char.Culture.Appearance.MouthShape
+	char.NoseShape = char.Culture.Appearance.NoseShape
 
 	char.Orientation = randomOrientation()
 	char.Profession = random.Item(professions)
-	char.Hobby = random.Item(hobbies)
+	char.Hobby = char.getRandomHobby()
 	char.Motivation = random.Item(motivations)
 
 	for i := 0; i < 2; i++ {
@@ -207,8 +214,8 @@ func GenerateCharacter() Character {
 		char.PsychologicalTraits = append(char.PsychologicalTraits, trait)
 	}
 
-	char.Height = randomHeight(char.Race, char.Gender)
-	char.Weight = randomWeight(char.Race, char.Gender)
+	char.Height = char.randomHeight()
+	char.Weight = char.randomWeight()
 
 	return char
 }
@@ -229,15 +236,14 @@ func GenerateCouple() Couple {
 
 	if char1.AgeCategory == "child" {
 		char1.AgeCategory = "adult"
-		char1.Age = getRandomAge(char1.Race, char1.AgeCategory)
+		char1.Age = getRandomAge(char1.AgeCategory)
 	}
 
 	if char2.AgeCategory == "child" {
 		char2.AgeCategory = "adult"
-		char2.Age = getRandomAge(char2.Race, char2.AgeCategory)
+		char2.Age = getRandomAge(char2.AgeCategory)
 	}
 
-	raceNames := []string{char1.Race.Name, char2.Race.Name}
 	orientations := []string{char1.Orientation, char2.Orientation}
 
 	if (char1.Orientation == "gay" && char2.Orientation == "straight") || (char1.Orientation == "straight" && char2.Orientation == "gay") {
@@ -251,16 +257,6 @@ func GenerateCouple() Couple {
 	} else if char1.Gender != char2.Gender && utility.ItemInCollection("gay", orientations) {
 		char2.Gender = char1.Gender
 		char2.FirstName, _ = getAppropriateName(char2.Gender, char2.Culture)
-	}
-
-	if utility.ItemInCollection("dwarf", raceNames) && utility.ItemInCollection("elf", raceNames) {
-		char1.Race = char2.Race
-		char1.FirstName, _ = getAppropriateName(char1.Gender, char1.Culture)
-	}
-
-	if utility.ItemInCollection("halfling", raceNames) {
-		char1.Race = races["halfling"]
-		char2.Race = races["halfling"]
 	}
 
 	if char1.Gender != char2.Gender {
@@ -277,10 +273,9 @@ func GenerateAdultDescendent(couple Couple) Character {
 	descendent := GenerateCharacter()
 
 	descendent.LastName = couple.Partner1.LastName
-	descendent.Race = getRaceFromParents(couple)
 
-	descendent.Age = getRandomAge(descendent.Race, "adult")
-	descendent.AgeCategory = getAgeCategoryFromAge(descendent.Age, descendent.Race)
+	descendent.Age = getRandomAge("adult")
+	descendent.AgeCategory = getAgeCategoryFromAge(descendent.Age)
 
 	return descendent
 }
@@ -290,8 +285,7 @@ func GenerateChild(couple Couple) Character {
 	child := GenerateCharacter()
 
 	child.LastName = couple.Partner1.LastName
-	child.Race = getRaceFromParents(couple)
-	child.Age, child.AgeCategory = getAgeFromParents(couple, child.Race)
+	child.Age, child.AgeCategory = getAgeFromParents(couple)
 
 	if child.AgeCategory == "child" {
 		child.Profession = "none"
@@ -304,8 +298,8 @@ func GenerateChild(couple Couple) Character {
 func GenerateCompatibleMate(char Character) Character {
 	mate := GenerateCharacter()
 
-	mate.Age = getRandomAge(mate.Race, char.AgeCategory)
-	mate.AgeCategory = getAgeCategoryFromAge(mate.Age, mate.Race)
+	mate.Age = getRandomAge(char.AgeCategory)
+	mate.AgeCategory = getAgeCategoryFromAge(mate.Age)
 
 	if char.Orientation == "straight" {
 		mate.Gender = getOppositeGender(char.Gender)

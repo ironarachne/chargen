@@ -5,7 +5,9 @@ var (
 		"adult":       12,
 		"elderly":     1,
 		"young adult": 2,
+		"teenager":    1,
 		"child":       1,
+		"infant":      1,
 	}
 
 	orientations = map[string]int{
@@ -35,17 +37,6 @@ var (
 		"healer",
 		"mage",
 		"merchant",
-	}
-
-	hobbies = []string{
-		"whittling",
-		"carving",
-		"darts",
-		"tournaments",
-		"fishing",
-		"hunting",
-		"painting",
-		"drinking",
 	}
 
 	traits = []string{
